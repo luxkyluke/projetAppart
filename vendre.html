@@ -1,0 +1,65 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>Adopte un Appart'</title>
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<link rel="stylesheet" href="css/style.css" />
+       <script src="js/jquery.js"></script>
+       <script src="js/function.js"></script>
+</head>
+<body class="vendrepage">
+    <!--Header-->
+			<div id='block-header'></div>
+		<!-- Main -->	
+		<div id="block-main">
+			<div class="conteneur">
+				<div class="row">
+					<div class="large-conteneur">	
+						<!-- Portfolio -->
+              <section>
+               	<header class="titre">
+                  <h2>Vendre</h2>
+                </header>
+               	<div class="formulaire">
+                 	<div class="box">                           
+                     <FORM METHOD = "POST" ACTION="javascript:saveVente()">                                	
+                     	<p>Type :</p> 
+                         <div id="type">
+                             <INPUT type="radio" name="type" value="Studio" checked> Studio 
+                             <INPUT type="radio" name="type" value="T1"> T1
+                             <INPUT type="radio" name="type" value="T2"> T2
+                             <INPUT type="radio" name="type" value="T3"> T3 
+                         </div>
+                         <div id="textbox">  
+                             <div id="adresse">       								
+                                 <p>Adresse :</p> 
+                                 <input type = "text" name = "adresse" autofocus/>
+                             </div>
+                             <div id="prix">
+                                 <p>Prix :</p>
+                                 <input type = "text" name = "prix" /> 
+                             </div>
+                             <div id="desc">
+                                 <p>Description :</p>
+                                 <input type = "text" name = "desc" />
+                             </div>
+                                <div>
+                             	<p>Photos : </p>
+                             	<input type="file" name="pic1" id="pic1" accept="image/gif, image/jpeg, image/png" />
+                              <input type="file" name="pic2" id="pic2" accept="image/gif, image/jpeg, image/png" />
+                              <input type="file" name="pic3" id="pic3" accept="image/gif, image/jpeg, image/png" />
+                             </div>
+                         </div>
+                         <input type="submit" class="valide" id="val" value="valider" />
+                     </FORM>
+                  </div>
+                </div>
+              </section>
+					</div>
+				</div>
+      </div>
+    </div>
+  <!--Footer-->
+	<div id='block-footer'></div>
+</body>
+</html>
