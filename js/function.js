@@ -78,8 +78,10 @@ function stopSlide(){
 	clearInterval(interval);
 }
 
+// TRAITEMENT
 function saveApparts(){
 	localStorage.setItem('apparts', JSON.stringify(apparts));
+	localStorage.setItem('idAppart', JSON.stringify(idAppart));
 	location.reload();
 } 
 
@@ -88,6 +90,7 @@ function saveVente(){
 		return;
 	var photos = {document.getElementById("pic1").value, document.getElementById("pic2").value, document.getElementById("pic3").value};
 	var appart= new Appart(
+						++idAppart,
 						document.getElementById("type").value, 
 						document.getElementById("desc").value, 
 						document.getElementById("prix").value,
@@ -108,6 +111,7 @@ function saveVente(){
 
 function recupApparts(){
 	apparts=JSON.parse(localStorage.getItem('apparts'));
+	idAppart= JSON.parse(localStorage.getItem('idAppart'));
 	if(apparts == null)
 		apparts=new Apparts(NULL, NULL, NULL, NULL);
 }
@@ -123,32 +127,32 @@ function affAppart(type){
 	}
 	else{
 		$.each (apts, function(i, apt){
-			('<div class="petit-conteneur">');
-				('<section class="box">');
-					('<a href="annonce.jsp?idAppart="'+ apt.id'"><div id ="slider" class="image">');
+			('<div class="petit-conteneur">').appendTo($("#main-conteneur"));
+				('<section class="box">').appendTo($("#main-conteneur"));
+					('<a href="annonce.jsp?idAppart="'+ apt.id'"><div id ="slider" class="image">').appendTo($("#main-conteneur"));
 					var photos =apt.photos;
-					('<ul>');
+					('<ul>').appendTo($("#main-conteneur"));
 					$.each (photos, function(j, pho){
-						("<li><img src=\""+pho+"\" alt=\"\" /></li>");
+						("<li><img src=\""+pho+"\" alt=\"\" /></li>").appendTo($("#main-conteneur"));
 					});
-					("</ul>");
-					("</a></div>");
-					("<p id=\"prix\">"+ (int) apt.prix +" &euro; </p>");
-					("<header>");
-						("<h3>Description</h3>");
-					("</header>");
-					("<p>"+ apt.desc() +"</p>");
-					("<p>"+ apt.adresse() +"</p>");														
-					("<footer>");
-					("<a href = \"annonce.jsp?idAppart="+ apt.id()+"\" class=\"button alt\"> Voir l'annonce </a>");
-					out.println("</footer>");
-				out.println("</section>");
-			out.println("</div>");
+					("</ul>").appendTo($("#main-conteneur"));
+					("</a></div>").appendTo($("#main-conteneur"));
+					("<p id=\"prix\">"+ (int) apt.prix +" &euro; </p>").appendTo($("#main-conteneur"));
+					("<header>").appendTo($("#main-conteneur"));
+						("<h3>Description</h3>").appendTo($("#main-conteneur"));
+					("</header>").appendTo($("#main-conteneur"));
+					("<p>"+ apt.desc() +"</p>").appendTo($("#main-conteneur"));
+					("<p>"+ apt.adresse() +"</p>").appendTo($("#main-conteneur"));														
+					("<footer>").appendTo($("#main-conteneur"));
+					("<a href = \"annonce.jsp?idAppart="+ apt.id+"\" class=\"button alt\"> Voir l'annonce </a>").appendTo($("#main-conteneur"));
+					("</footer>").appendTo($("#main-conteneur"));
+				("</section>").appendTo($("#main-conteneur"));
+			("</div>").appendTo($("#main-conteneur"));
 			nbAppartMaxRow++;
 			if(nbAppartMaxRow==3){
 				nbAppartMaxRow=0;
-				out.println("</div>");
-				out.println("<div class=\"row\">");
+				("</div>").appendTo($("#main-conteneur"));
+				("<div class=\"row\">").appendTo($("#main-conteneur"));
 			}
 		});
 	}
