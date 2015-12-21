@@ -14,7 +14,7 @@ function Appart(id, type, desc, prix, adresse, photos){
 
 function Apparts(studio, T1, T2, T3){
 	this.studio=studio;
-	this.T1=T1:
+	this.T1=T1;
 	this.T2=T2; 
 	this.T3=T3;
 }
@@ -36,7 +36,7 @@ $(document).ready(function(){
 	$("#block-header").load('header.html');
 
 	if(typeof(Storage) !== "undefined") {
-		recupAppart();
+		recupApparts();
 	}
 	else 
 		alert("Désolé, mais le Web Storage n'est pas suppoté");
@@ -88,7 +88,7 @@ function saveApparts(){
 function saveVente(){
 	if(apparts==null)
 		return;
-	var photos = {document.getElementById("pic1").value, document.getElementById("pic2").value, document.getElementById("pic3").value};
+	var photos = {0 : document.getElementById("pic1").value, 1 : document.getElementById("pic2").value, 2 : document.getElementById("pic3").value};
 	var appart= new Appart(
 						++idAppart,
 						document.getElementById("type").value, 
@@ -113,7 +113,7 @@ function recupApparts(){
 	apparts=JSON.parse(localStorage.getItem('apparts'));
 	idAppart= JSON.parse(localStorage.getItem('idAppart'));
 	if(apparts == null)
-		apparts=new Apparts(NULL, NULL, NULL, NULL);
+		apparts=new Apparts(null, null, null, null);
 }
 
 //COUCOU COUAVOUZZ !!
@@ -123,15 +123,14 @@ function affAppart(type){
 	$("#main-conteneur").load("opensection.html");
 	var apts = getAppart(type);	
 	var nbAppartMaxRow=0;
-	('<header class="titre"> Nod Bites </header>').appendTo($("main-conteneur"));
+	('<header class="titre"> Nos Bites </header>').appendTo($("#main-conteneur"));
 	if(apts == null || apts.isEmptyObject())
 		("Malheureusement aucun "+ type +" n'est disponible a  l'achat...").appendTo($("#main-conteneur"));
-	}
 	else{
 		$.each (apts, function(i, apt){
 			('<div class="petit-conteneur">').appendTo($("#main-conteneur"));
 				('<section class="box">').appendTo($("#main-conteneur"));
-					('<a href="annonce.jsp?idAppart="'+ apt.id'"><div id ="slider" class="image">').appendTo($("#main-conteneur"));
+					('<a href="annonce.jsp?idAppart="'+ apt.id +'"><div id ="slider" class="image">').appendTo($("#main-conteneur"));
 					var photos =apt.photos;
 					('<ul>').appendTo($("#main-conteneur"));
 					$.each (photos, function(j, pho){
@@ -139,7 +138,7 @@ function affAppart(type){
 					});
 					("</ul>").appendTo($("#main-conteneur"));
 					("</a></div>").appendTo($("#main-conteneur"));
-					("<p id=\"prix\">"+ (int) apt.prix +" &euro; </p>").appendTo($("#main-conteneur"));
+					("<p id=\"prix\">"+ apt.prix +" &euro; </p>").appendTo($("#main-conteneur"));
 					("<header>").appendTo($("#main-conteneur"));
 						("<h3>Description</h3>").appendTo($("#main-conteneur"));
 					("</header>").appendTo($("#main-conteneur"));
@@ -161,7 +160,7 @@ function affAppart(type){
 }
 
 function getAppart(type){
-	if(apparts == NULL)
+	if(apparts == null)
 		return;
 	if(type=="studio")
 		return apparts.studio;
