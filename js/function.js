@@ -3,8 +3,8 @@
 var imgHeight;
 var boxHeightMax=0;
 
-function Appart(id, type, desc, prix, adresse, photos){
-	this.id = id;
+function Appart(type, desc, prix, adresse, photos){
+	//this.id = id;
 	this.type = type;
 	this.desc = desc;
 	this.prix = prix;
@@ -20,7 +20,7 @@ function Apparts(studio, T1, T2, T3){
 }
 
 var apparts;	
-var idAppart;
+//var idAppart;
 
 $(window).load(function(){
 	//redimesion fenetre de l'image
@@ -29,19 +29,30 @@ $(window).load(function(){
 	
 	imgHeight = $("#nexter ul li img").height();
 	$(".main-conteneur .image").css({height:imgHeight});
+
+	
 });
 
 $(document).ready(function(){
+	
 	$("#block-footer").load('footer.html');
 	$("#block-header").load('header.html');
 
 	if(typeof(Storage) !== "undefined") {
 		recupApparts();
+
+		/*var photos = {0 : "\\images\\appart\\studio1-1.jpg", 1 : "\\images\\appart\\studio1-2.jpg", 2 : "\\images\\appart\\studio1-3.jpg"};
+		var appart= new Appart("studio", "super appart vu sur la mer tout ça", "50 000", "22 rue du roule", photos);
+		apparts.studio.push(appart);
+		saveApparts();*/
 	}
 	else 
 		alert("Désolé, mais le Web Storage n'est pas suppoté");
 	
 });
+	
+
+
 
 //SLIDER
 var interval;
@@ -81,8 +92,7 @@ function stopSlide(){
 // TRAITEMENT
 function saveApparts(){
 	localStorage.setItem('apparts', JSON.stringify(apparts));
-	localStorage.setItem('idAppart', JSON.stringify(idAppart));
-	location.reload();
+	//location.reload();
 } 
 
 function saveVente(){
@@ -90,7 +100,6 @@ function saveVente(){
 		return;
 	var photos = {0 : document.getElementById("pic1").value, 1 : document.getElementById("pic2").value, 2 : document.getElementById("pic3").value};
 	var appart= new Appart(
-						++idAppart,
 						document.getElementById("type").value, 
 						document.getElementById("desc").value, 
 						document.getElementById("prix").value,
@@ -110,64 +119,90 @@ function saveVente(){
 }
 
 function recupApparts(){
-	apparts=JSON.parse(localStorage.getItem('apparts'));
-	idAppart= JSON.parse(localStorage.getItem('idAppart'));
-	if(apparts == null)
-		apparts=new Apparts(null, null, null, null);
+	apparts=JSON.parse(localStorage.getItem('apparts'));	
+	if(apparts.length == 0)
+		apparts=new Apparts(new Array(), new Array(), new Array(), new Array());
 }
 
 //COUCOU COUAVOUZZ !!
 
 function affAppart(type){
-	document.getElementById('main-conteneur').innerHTML="";	
-	//$("#main-conteneur").load("opensection.html");
+	document.getElementById('main-conteneur').innerHTML="";
 	$("#main-conteneur").append('<div id="block-main">');
-		$("#main-conteneur").append('<div class="conteneur">');
-			$("#main-conteneur").append('<div class="large-conteneur">');
-				$("#main-conteneur").append('<section>');
+		$("#block-main").append('<div class="conteneur">');
+			$(".conteneur").append('<div class="large-conteneur">');
+				$(".large-conteneur").append('<section id="section">');
 	var apts = getAppart(type);	
 	var nbAppartMaxRow=0;
-	//('<header class="titre"> Nos Bites </header>').appendTo($("#main-conteneur"));
-	$('#main-conteneur').append('<header class="titre"> Nos '+ type +' </header>');
-	if(apts == null || apts.isEmptyObject()){
-		$('#main-conteneur').append("Malheureusement aucun "+ type +" n'est disponible a  l'achat...");
+	var row=0;
+	var str = type.charAt(0).toUpperCase() + type.slice(1);
+	$('#section').append('<header class="titre"> <h2> Nos '+ str +'s </h2></header>');
+	if(apts == null || apts.length == 0){
+		$('#section').append("Malheureusement aucun "+ type +"s n'est disponible à l'achat...");
 	}
 	else{
+		$('#section').append('<div class="row" id ="row'+row+'">');
 		$.each (apts, function(i, apt){
-			('<div class="petit-conteneur">').appendTo($("#main-conteneur"));
-				('<section class="box">').appendTo($("#main-conteneur"));
-					('<a href="annonce.jsp?idAppart="'+ apt.id +'"><div id ="slider" class="image">').appendTo($("#main-conteneur"));
-					var photos =apt.photos;
-					('<ul>').appendTo($("#main-conteneur"));
-					$.each (photos, function(j, pho){
-						("<li><img src=\""+pho+"\" alt=\"\" /></li>").appendTo($("#main-conteneur"));
-					});
-					("</ul>").appendTo($("#main-conteneur"));
-					("</a></div>").appendTo($("#main-conteneur"));
-					("<p id=\"prix\">"+ apt.prix +" &euro; </p>").appendTo($("#main-conteneur"));
-					("<header>").appendTo($("#main-conteneur"));
-						("<h3>Description</h3>").appendTo($("#main-conteneur"));
-					("</header>").appendTo($("#main-conteneur"));
-					("<p>"+ apt.desc() +"</p>").appendTo($("#main-conteneur"));
-					("<p>"+ apt.adresse() +"</p>").appendTo($("#main-conteneur"));														
-					("<footer>").appendTo($("#main-conteneur"));
-					("<a href = \"annonce.jsp?idAppart="+ apt.id+"\" class=\"button alt\"> Voir l'annonce </a>").appendTo($("#main-conteneur"));
-					("</footer>").appendTo($("#main-conteneur"));
-				("</section>").appendTo($("#main-conteneur"));
-			("</div>").appendTo($("#main-conteneur"));
+			$('#row'+row).append('<div class="petit-conteneur" id="pt-cont'+i+'">');
+				$('#pt-cont'+i).append('<section class="box" id="box'+i+'">');
+					$('#box'+i).append('<a href="javascript:affAnnonce('+i+')"><div id ="slider" class="image">');
+						var photos =apt.photos;
+						if(photos != null){
+							var str="";
+							var charge=false;
+							var phos = new Array();
+							var nbPh=0;
+							var img;
+							$.each (photos, function(j, pho){
+								img = precharger_image('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
+								    
+							    img.onload = function()
+							    {
+							       $('#slider').append('<ul><li><img src="'+img.src+ '"</li></ul>');
+							    }
+								
+							});
+							/*$('#slider').append('<ul><li></li></ul>');
+							$('#slider ul li').attr('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet', 'mon-image.jpg').load(function(){
+							    $('body').append(this);
+							});*/
+
+							/*while(!charge){
+								image.onload = function(){
+									charge=true;
+								}
+							}*/
+							//$.each (phos, function(j, p){
+								//str+='<li>/></li>';
+							//});
+							
+						}
+				   		else
+				   			$('#slider').append('<ul><li><img></li></ul>');                    
+					//$('#box'+i).append("</div></a>");
+					$('#box'+i).append("<p id=\"prix\">"+ apt.prix +" &euro; </p>");
+					$('#box'+i).append("<header><h3>Description</h3></header>");
+					$('#box'+i).append("<p>"+ apt.desc +"</p>");
+					$('#box'+i).append("<p>"+ apt.adresse +"</p>");													
+					$('#box'+i).append('<footer><a href="javascript:affAnnonce('+i+')" class=\"button alt\"> Voir l\'annonce </a></footer>');
+				$('#pt-cont'+i).append("</section>");
+			$('#row'+row).append("</div>");
 			nbAppartMaxRow++;
 			if(nbAppartMaxRow==3){
 				nbAppartMaxRow=0;
-				("</div>").appendTo($("#main-conteneur"));
-				("<div class=\"row\">").appendTo($("#main-conteneur"));
+				row++;
+				$('#section').append('<div class="row" id ="row'+row+'">');
+				/*$('#section').append("</div>");
+				$('#section').append("<div class=\"row\">");*/
 			}
 		});
-	}
-				$("#main-conteneur").append('<\\section>');
-			$("#main-conteneur").append('<\\div>');
-		$("#main-conteneur").append('<\\div>');
-	$("#main-conteneur").append('<\\div>');	
-				
+	}				
+}
+
+function precharger_image(url){
+    var img = new Image();
+    img.src=url;
+    return img;
 }
 
 function getAppart(type){
