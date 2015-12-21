@@ -120,12 +120,18 @@ function recupApparts(){
 
 function affAppart(type){
 	document.getElementById('main-conteneur').innerHTML="";	
-	$("#main-conteneur").load("opensection.html");
+	//$("#main-conteneur").load("opensection.html");
+	$("#main-conteneur").append('<div id="block-main">');
+		$("#main-conteneur").append('<div class="conteneur">');
+			$("#main-conteneur").append('<div class="large-conteneur">');
+				$("#main-conteneur").append('<section>');
 	var apts = getAppart(type);	
 	var nbAppartMaxRow=0;
-	('<header class="titre"> Nos Bites </header>').appendTo($("#main-conteneur"));
-	if(apts == null || apts.isEmptyObject())
-		("Malheureusement aucun "+ type +" n'est disponible a  l'achat...").appendTo($("#main-conteneur"));
+	//('<header class="titre"> Nos Bites </header>').appendTo($("#main-conteneur"));
+	$('#main-conteneur').append('<header class="titre"> Nos '+ type +' </header>');
+	if(apts == null || apts.isEmptyObject()){
+		$('#main-conteneur').append("Malheureusement aucun "+ type +" n'est disponible a  l'achat...");
+	}
 	else{
 		$.each (apts, function(i, apt){
 			('<div class="petit-conteneur">').appendTo($("#main-conteneur"));
@@ -157,6 +163,11 @@ function affAppart(type){
 			}
 		});
 	}
+				$("#main-conteneur").append('<\\section>');
+			$("#main-conteneur").append('<\\div>');
+		$("#main-conteneur").append('<\\div>');
+	$("#main-conteneur").append('<\\div>');	
+				
 }
 
 function getAppart(type){
