@@ -116,6 +116,8 @@ function recupApparts(){
 		apparts=new Apparts(NULL, NULL, NULL, NULL);
 }
 
+//COUCOU COUAVOUZZ !!
+
 function affAppart(type){
 	document.getElementById('main-conteneur').innerHTML="";	
 	$("#main-conteneur").load("opensection.html");
