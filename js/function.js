@@ -120,7 +120,7 @@ function saveVente(){
 
 function recupApparts(){
 	apparts=JSON.parse(localStorage.getItem('apparts'));	
-	if(apparts.length == 0)
+	if(apparts == null || apparts.length == 0)
 		apparts=new Apparts(new Array(), new Array(), new Array(), new Array());
 }
 
@@ -154,13 +154,11 @@ function affAppart(type){
 							var nbPh=0;
 							var img;
 							$.each (photos, function(j, pho){
-								img = precharger_image('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
-								    
-							    img.onload = function()
-							    {
-							       $('#slider').append('<ul><li><img src="'+img.src+ '"</li></ul>');
-							    }
-								
+								//img = precharger_image('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
+							   // img.onload = function()
+							    
+							    $('#slider').append('<ul><li><img src="#"id="'+type + i + "-" + j +'" /></li></ul>');
+								$('#'+type + i + "-" + j).attr('src', 'C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
 							});
 							/*$('#slider').append('<ul><li></li></ul>');
 							$('#slider ul li').attr('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet', 'mon-image.jpg').load(function(){
