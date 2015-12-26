@@ -34,24 +34,32 @@ $(window).load(function(){
 });
 
 $(document).ready(function(){
-	
-	$("#block-footer").load('footer.html');
+	var nav = navigator.appName ;
+	if(nav == 'Google Chrome')
+		$("#block-footer").load(chrome.extension.getURL('footer.html'));
+	else	
+		$("#block-footer").load('footer.html');
 	$("#block-header").load('header.html');
 
-	if(typeof(Storage) !== "undefined") {
-		recupApparts();
 
-		/*var photos = {0 : "\\images\\appart\\studio1-1.jpg", 1 : "\\images\\appart\\studio1-2.jpg", 2 : "\\images\\appart\\studio1-3.jpg"};
-		var appart= new Appart("studio", "super appart vu sur la mer tout ça", "50 000", "22 rue du roule", photos);
-		apparts.studio.push(appart);
-		saveApparts();*/
+	if (window.File && window.FileReader && window.FileList && window.Blob){
+		if(typeof(Storage) !== "undefined") {
+			recupApparts();
+
+			/*var photos = {0 : "\\images\\appart\\studio1-1.jpg", 1 : "\\images\\appart\\studio1-2.jpg", 2 : "\\images\\appart\\studio1-3.jpg"};
+			var appart= new Appart("studio", "super appart vu sur la mer tout ça", "50 000", "22 rue du roule", photos);
+			apparts.studio.push(appart);
+			saveApparts();*/
+		}
+		else 
+			alert("Désolé, mais le Web Storage n'est pas suppoté");
 	}
-	else 
-		alert("Désolé, mais le Web Storage n'est pas suppoté");
+	else
+	  document.write('<i>API File non reconnue par ce navigateur.</i>');
+
+	
 	
 });
-	
-
 
 
 //SLIDER
@@ -152,14 +160,24 @@ function affAppart(type){
 							var charge=false;
 							var phos = new Array();
 							var nbPh=0;
-							var img;
+							var img = photos[0];
+
+							$('#slider').append('<ul id="ul'+i+'"></ul>');
+							
 							$.each (photos, function(j, pho){
+								var pathimg = 'file:///C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+photos[j]; 
+								$('#ul'+i).append('<li><img src="#"id="'+type + i + "-" + j +'" /></li>');
+								$('#'+type + i + "-" + j).attr('src', pathimg);
+							});
+							
+
+							/*$.each (photos, function(j, pho){	
 								//img = precharger_image('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
 							   // img.onload = function()
 							    
 							    $('#slider').append('<ul><li><img src="#"id="'+type + i + "-" + j +'" /></li></ul>');
 								$('#'+type + i + "-" + j).attr('src', 'C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+pho);
-							});
+							});*/
 							/*$('#slider').append('<ul><li></li></ul>');
 							$('#slider ul li').attr('C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet', 'mon-image.jpg').load(function(){
 							    $('body').append(this);
@@ -214,4 +232,18 @@ function getAppart(type){
 		return apparts.T2;
 	if(type=="T3")
 		return apparts.T3;
+}
+
+
+function imageHandler(e2) 
+{ 
+  $('#slider').append('<ul><li><img src="C:\\Users\\TonioDeMoreno\\Documents\\Pweb\\projet'+img+'"/></li></ul>');
+}
+
+function loadimage(src)
+{
+  var filename = e1.target.files[0]; 
+  var fr = new FileReader();
+  fr.onload = imageHandler;  
+  fr.readAsDataURL(filename); 
 }
