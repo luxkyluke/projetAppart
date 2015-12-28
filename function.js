@@ -51,28 +51,6 @@ $(document).ready(function(){
 	
 });
 
-//redimesion fenetre de l'image
-function redimFenetreImg(){
-	imgH = $(".slider ul li img").height();
-	$(".box .image").css({height:imgH});
-	
-	imgHeight = $("#nexter ul li img").height();
-	$(".main-conteneur .image").css({height:imgHeight});
-}
-
-//SLIDER
-var interval;
-$(function(){
-	
-});
-
-//NEXTER
-$(function(){
-	$("#nexter:has(ul li:gt(1))").click(function(){nextImg()});
-});
-
-
-
 
 function nextImg(){
 	$("#nexter ul").animate({marginTop:-imgHeight}, 2000, function(){
@@ -158,25 +136,23 @@ function affAppart(type){
 		$.each (apts, function(i, apt){
 			$('#row'+row).append('<div class="petit-conteneur" id="pt-cont'+i+'">');
 				$('#pt-cont'+i).append('<section class="box" id="box'+i+'">');
-					$('#box'+i).append('<a href="javascript:" onclick="affAnnonce('+i+', '+type+')"><div class ="image slider" id="slider'+i+'">');
+					$("#box"+i).append('<div class="supprimer"><img src="#" type="button" id=\'supp'+i+'\' class="supp"></div>');
+					$('#supp' + i).attr('src', pathRepImg+"\\images\\supp.png");
+					$('#box'+i).append('<a onclick="affAnnonce(\''+i+'\', \''+type+'\')" href="javascript:void(0);"><div class ="image slider" id="slider'+i+'">');
 						var photos =apt.photos;
 						if(photos != null){
 							$('#slider'+i).append('<ul id="ul'+i+'"></ul>');
-							
+							var nbImg = 0;
 							$.each (photos, function(j, pho){
 								var pathimg = pathRepImg +photos[j]; 
 								$('#ul'+i).append('<li><img src="#"id="'+type + i + "-" + j +'" /></li>');
 								$('#'+type + i + "-" + j).attr('src', pathimg);
+								nbImg++;
 							});
-							redimFenetreImg();	
-							$("#slider"+i+":has(ul li:gt(1))").hover(
-								function (){	
-									setTimeout(function(){slideImg()}, 500);
-									interval = setInterval(function (){slideImg()}, 4000); 
-								}
-								,function (){
-									stopSlide(); 
-							});	
+							redimFenetreImg();
+							if(nbImg > 1)	{
+								listenerSlider(i);
+							}
 						}
 				   		else
 				   			$('#slider').append('<ul><li><img></li></ul>');     
@@ -184,7 +160,7 @@ function affAppart(type){
 					$('#box'+i).append("<header><h3>Description</h3></header>");
 					$('#box'+i).append("<p>"+ apt.desc +"</p>");
 					$('#box'+i).append("<p>"+ apt.adresse +"</p>");													
-					$('#box'+i).append('<footer><a href="javascript:" onclick="affAnnonce('+i+', '+type+')" class=\"button alt\"> Voir l\'annonce </a></footer>');
+					$('#box'+i).append('<footer><a onclick="affAnnonce(\''+i+'\', \''+type+'\')" href="javascript:void(0);" class=\"button alt\"> Voir l\'annonce </a></footer>');
 				$('#pt-cont'+i).append("</section>");
 			$('#row'+row).append("</div>");
 			nbAppartMaxRow++;
@@ -197,6 +173,17 @@ function affAppart(type){
 	}				
 }	
 
+function listenerSlider(i){
+	$("#slider"+i+":has(ul li:gt(1))").hover(
+		function (){	
+			setTimeout(function(){slideImg()}, 500);
+			interval = setInterval(function (){slideImg()}, 4000); 
+		}
+		,function (){
+			stopSlide(); 
+	});	
+}
+
 function slideImg(){
 	$(".slider ul:hover").animate({marginTop:-imgH}, 2000, function(){
 		$(this).css({marginTop:0}).find("li:last").after($(this).find("li:first"));
@@ -206,13 +193,13 @@ function slideImg(){
 function getAppart(type){
 	if(apparts == null)
 		return;
-	if(type=="studio")
+	if(type == "studio")
 		return apparts.studio;
-	if(type=="T1")
+	if(type == "T1")
 		return apparts.T1;
-	if(type=="T2")
+	if(type == "T2")
 		return apparts.T2;
-	if(type=="T3")
+	if(type == "T3")
 		return apparts.T3;
 }
 
@@ -222,10 +209,13 @@ function vendre(){
 }
 
 function affAnnonce(indApp, type){
+	if(indApp == null || type == null || indApp == 'undefined' || type == 'undefined' || indApp == '' || type == '' )
+		return;
+	//var ind = (int) indApp;
 	document.getElementById('main-conteneur').innerHTML="";
 	$("#main-conteneur").append('<div id="block-main">');
-		$("#block-main").append('<div class="conteneur>');
-			$(".conteneur").append('<div class="row">');
+		$("#block-main").append('<div id="conteneur">');
+			$("#conteneur").append('<div class="row">');
 				$(".row").append('<div class="main-conteneur" id="grand-conteneur">');
 					$("#grand-conteneur").append('<article class="box post" id="article">');
 						var apts = getAppart(type);
@@ -233,33 +223,63 @@ function affAnnonce(indApp, type){
 						if(appart!=null){
 							$("#article").append("<a href=\"\" onclick =\"return false;\"><div id =\"nexter\" class=\"image\">");
 							var photos =appart.photos;
-							$("#article").append('<ul id="ul'+i+'"></ul>');	
+							$("#nexter").append('<ul id="ul"></ul>');	
 							$.each (photos, function(j, pho){
 								var pathimg = pathRepImg +photos[j]; 
-								$('#ul'+i).append('<li><img src="#"id="'+type + i + "-" + j +'" /></li>');
-								$('#'+type + i + "-" + j).attr('src', pathimg);
+								$('#ul').append('<li><img src="#"id="'+type + j +'" /></li>');
+								$('#'+type + j).attr('src', pathimg);
 							});
+							redimFenetreImg();
+							$("#nexter:has(ul li:gt(1))").click(function(){nextImg()});
 							$("#article").append("<div id=\"prix\"> <p>"+appart.prix+" &euro;</p></div>");
 							$("#article").append("<div id=\"type\"><h3>" + appart.type.charAt(0).toUpperCase() + appart.type.slice(1) +"</h3>");
 							$("#article").append("<header><h2>Description</h2></header>");
 							$("#article").append("<p>"+ appart.desc +"</p>");
 							$("#article").append("<header><h3>Adresse</h3></header>");
-							$("#article").append("<p>" + appart.address+ "</p>");	
+							$("#article").append("<p>" + appart.adresse+ "</p>");	
 						}
 						else {
 							$("#article").append("annonce introuvable");
 						}
-	            var i = (Math.random() * (apts.size()));
-				appart = apts[i];
-				if(appart!=null){
-	                $('.row').append('<div class=\"petit-conteneur\" id="pt-cont">');
-						$("#pt-cont").append('<section class=\"box\" id="box">');
-							$("#box").append('<a href="javascript:affAnnonce('+i+', '+type+')" class=\"image\">');
-							$("#box").append("<img src=\""+appart.photos[0]+"\" alt=\"\" /></a>");
-							$("#box").append("<p id=\"prix\">"+ appart.prix +" &euro; </p>");
-							$("#box").append("<header><h3>Description</h3></header>");
-							$("#box").append("<p>"+ appart.desc +"</p>");
-							$("#box").append("<p>"+ appart.adresse +"</p>");														
-							$("#box").append('<footer><a href="javascript:affAnnonce('+i+', '+type+')" class=\"button alt\"> Voir l\'annonce </a></footer>');					
+				if((apts.length) > 1){
+		            var i = parseInt(Math.random() * (apts.length));
+		            while (i == indApp){i = parseInt(Math.random() * (apts.length));}
+					var apt = apts[i];
+					if(appart!=null){
+		                $('.row').append('<div class=\"petit-conteneur\" id="pt-cont">');
+		                	$('#pt-cont').append('<section class="box" id="box">');
+							$('#box').append('<a onclick="affAnnonce(\''+i+'\', \''+type+'\')" href="javascript:void(0);"><div class ="image slider" id="slider'+i+'">');
+								var photos =apt.photos;
+								if(photos != null){
+									$('#slider'+i).append('<ul id="ul'+i+'"></ul>');
+									var nbImg = 0;
+									$.each (photos, function(j, pho){
+										var pathimg = pathRepImg +photos[j]; 
+										$('#ul'+i).append('<li><img src="#"id="'+type + i + "-" + j +'" /></li>');
+										$('#'+type + i + "-" + j).attr('src', pathimg);
+										nbImg++;
+									});
+									redimFenetreImg();	
+									if(nbImg > 1){
+										//listenerSlider(i);
+									}
+								}
+						   		else
+						   			$('#slider').append('<ul><li><img></li></ul>');     
+								$('#box').append("<p id=\"prix\">"+ apt.prix +" &euro; </p>");
+								$('#box').append("<header><h3>Description</h3></header>");
+								$('#box').append("<p>"+ apt.desc +"</p>");
+								$('#box').append("<p>"+ apt.adresse +"</p>");													
+								$('#box').append('<footer><a onclick="affAnnonce(\''+i+'\', \''+type+'\')" href="javascript:void(0);" class=\"button alt\"> Voir l\'annonce </a></footer>');				
+					}
 				}
+}
+
+//redimesion fenetre de l'image
+function redimFenetreImg(){
+	imgH = $(".slider ul li img").height();
+	$(".box .image").css({height:imgH});
+	
+	imgHeight = $("#nexter ul li img").height();
+	$("#grand-conteneur #article .image").css({height:imgHeight});
 }
