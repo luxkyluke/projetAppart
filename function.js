@@ -136,11 +136,12 @@ function affAppart(type){
 		$.each (apts, function(i, apt){
 			$('#row'+row).append('<div class="petit-conteneur" id="pt-cont'+i+'">');
 				$('#pt-cont'+i).append('<section class="box" id="box'+i+'">');
-					$("#box"+i).append('<div class="supprimer"><img src="#" type="button" id=\'supp'+i+'\' class="supp"></div>');
+					$("#box"+i).append('<div class="supprimer"><a onclick="suppAppart(\''+i+'\', \''+type+'\')" href="javascript:void(0);"><img src="#" type="button" id=\'supp'+i+'\' class="supp"></a></div>');
 					$('#supp' + i).attr('src', pathRepImg+"\\images\\supp.png");
 					$('#box'+i).append('<a onclick="affAnnonce(\''+i+'\', \''+type+'\')" href="javascript:void(0);"><div class ="image slider" id="slider'+i+'">');
 						var photos =apt.photos;
 						if(photos != null){
+							
 							$('#slider'+i).append('<ul id="ul'+i+'"></ul>');
 							var nbImg = 0;
 							$.each (photos, function(j, pho){
@@ -154,8 +155,10 @@ function affAppart(type){
 								listenerSlider(i);
 							}
 						}
-				   		else
-				   			$('#slider').append('<ul><li><img></li></ul>');     
+						else
+				   			$('#slider').append('<ul><li><img></li></ul>'); 
+						
+				   		    
 					$('#box'+i).append("<p id=\"prix\">"+ apt.prix +" &euro; </p>");
 					$('#box'+i).append("<header><h3>Description</h3></header>");
 					$('#box'+i).append("<p>"+ apt.desc +"</p>");
@@ -201,6 +204,14 @@ function getAppart(type){
 		return apparts.T2;
 	if(type == "T3")
 		return apparts.T3;
+}
+
+function suppAppart(idApp, type){
+	if (confirm("Voulez-vous vraiment supprimer cette tache ?")) {	   
+		getAppart(type).splice(idApp, 1);
+		saveApparts();
+	}
+	affAppart(type);
 }
 
 function vendre(){

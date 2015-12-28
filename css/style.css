@@ -774,10 +774,20 @@ ul{
 /*-----------------------------------SUPPRIMER-------------------------------------------*/
 
 .supprimer{
-	position: relative;
+	z-index: 1;
+	position: absolute;
+	margin-top: -2.5%;
+	margin-left: 15%;
 }
 
-.box .supprimer img{
+.box .supp img{
+	float:right;
+	width: auto;
+	height: 35px;
+	padding: 5px;
+}
+
+.supp{
 	float:right;
 	width: auto;
 	height: 35px;
